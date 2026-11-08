@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-studio.local/schemas/agent-templates.schema.json",
+  "title": "Agent Studio portable configuration",
+  "description": "Portable Agent Studio template documents: full exports and .agent-studio/agent-templates.json project files. Contains no secrets and no machine-specific absolute paths.",
+  "type": "object",
+  "required": ["format", "schemaVersion", "templates"],
+  "additionalProperties": false,
+  "properties": {
+    "format": { "const": "agent-studio/templates" },
+    "schemaVersion": { "type": "integer", "minimum": 1, "maximum": 1 },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "plugin": { "const": "agent-studio" },
+        "pluginVersion": { "type": ["string", "null"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "templates": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/template" }
+    },
+    "customTools": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/customTool" }
+    }
+  },
+  "$defs": {
+    "customTool": {
+      "type": "object",
+      "required": ["name", "description", "content"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$" },
+        "name": { "type": "string", "pattern": "^[a-z][a-z0-9_]{0,63}$" },
+        "description": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "content": { "type": "string", "minLength": 1, "maxLength": 50000 }
+      }
+    },
+    "template": {
+      "type": "object",
+      "required": ["id", "name", "role", "instructions"],
+      "additionalProperties": true,
+      "properties": {
+        "schemaVersion": { "type": "integer", "minimum": 1 },
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "role": { "type": "string", "minLength": 1 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "instructions": { "type": "string", "minLength": 1, "maxLength": 20000 },
+        "skills": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "scope": { "enum": ["global", "project"] },
+        "enabled": { "type": "boolean" },
+        "builtin": { "type": "boolean" },
+        "updatedAt": { "type": ["string", "null"] },
+        "model": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "provider": { "type": "string" },
+                "model": { "type": "string" }
+              }
+            }
+          ]
+        },
+        "maxDelegationDepth": { "type": "integer", "minimum": 1, "maximum": 4 },
+        "toolPolicy": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "preset": { "enum": ["read-only", "code-editing", "full-developer", "safe-qa", "research-only", "custom"] },
+            "rules": {
+              "type": "object",
+              "additionalProperties": { "enum": ["allow", "deny", "ask", "inherit"] },
+              "propertyNames": { "pattern": "^[a-z][a-z0-9_-]*$" }
+            },
+            "notes": {
+              "type": "object",
+              "additionalProperties": { "type": "string" }
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "not": {
+            "anyOf": [
+              { "required": ["apiKey"] },
+              { "required": ["token"] },
+              { "required": ["secret"] },
+              { "required": ["password"] },
+              { "required": ["credentials"] }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Agent Studio",
+    "description": "Создание, настройка и запуск сабагентов по ролям: шаблоны, tool policy, глобальные и project-конфигурации, переносимый экспорт и импорт."
+  },
+  "panel": "Agent Studio"
+}

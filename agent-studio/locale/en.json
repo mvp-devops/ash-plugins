@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Agent Studio",
+    "description": "Create, configure and run role-based subagents: templates, tool policy, global and project scopes, portable export and import."
+  },
+  "panel": "Agent Studio"
+}

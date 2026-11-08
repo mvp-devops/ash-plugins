@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sdd-workflow-plugin/validation-report.schema.json",
+  "title": "SDD validation report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "spec_id", "generated_at", "overall", "feature_complete", "checks", "summary"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "spec_id": { "type": "string" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "overall": { "enum": ["passed", "failed", "blocked"] },
+    "feature_complete": { "type": "boolean", "description": "true только при отсутствии failed/blocked проверок уровня blocker." },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["check_id", "kind", "status", "method", "actual", "blocking"],
+        "properties": {
+          "check_id": { "type": "string", "pattern": "^V-\\d{3}$" },
+          "kind": { "enum": ["build", "typecheck", "lint", "unit", "integration", "criterion", "contract", "edge_case", "regression", "coverage"] },
+          "status": { "enum": ["passed", "failed", "blocked", "skipped", "not_applicable"] },
+          "requirement_id": { "type": "string" },
+          "criterion_id": { "type": "string" },
+          "method": { "type": "string", "description": "Тест или способ проверки." },
+          "actual": { "type": "string", "description": "Фактический результат." },
+          "probable_cause": { "type": "string", "description": "Предполагаемая причина (для failed/blocked)." },
+          "minimal_fix": { "type": "string", "description": "Минимальное исправление (для failed/blocked)." },
+          "blocking": { "type": "boolean", "description": "true — проверка блокирует объявление фичи завершённой." }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passed", "failed", "blocked", "skipped", "not_applicable"],
+      "properties": {
+        "passed": { "type": "integer", "minimum": 0 },
+        "failed": { "type": "integer", "minimum": 0 },
+        "blocked": { "type": "integer", "minimum": 0 },
+        "skipped": { "type": "integer", "minimum": 0 },
+        "not_applicable": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

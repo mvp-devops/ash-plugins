@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Documentation templates",
+    "description": "Project documentation templates panel: create, edit, generate documents from variables, save into the workspace docs/ directory, import and export."
+  },
+  "panel": "Documentation templates"
+}

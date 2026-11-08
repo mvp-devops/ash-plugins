@@ -1,0 +1,63 @@
+{
+  "name": "@local/sdd-workflow-plugin",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Spec-Driven Development (SDD) workflow for DeepSeek Harness: machine-readable specification, traceable plan and tasks, evidence-gated implementation, validation reports, and an SDD panel in the Web UI.",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./schema/*.json": "./dist/schemas/*.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "dist/schemas/*.json",
+    "client.js",
+    "cordis.yml",
+    "icon.svg",
+    "locale/*.json",
+    "README.md",
+    "guide.md",
+    "docs/usage.md"
+  ],
+  "engines": {
+    "node": ">=22",
+    "dsh": ">=0.2.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "~4.1.0"
+  },
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": { "patch": "./cordis.yml" },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-commands"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/copy-schemas.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint src tests client.js scripts",
+    "pretest": "pnpm run build",
+    "test": "node --test \"tests/**/*.test.js\"",
+    "prepack": "pnpm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "eslint": "^9.20.0",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.24.0"
+  },
+  "license": "MIT"
+}

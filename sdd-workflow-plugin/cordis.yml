@@ -1,0 +1,4 @@
+- insert:
+    - id: sdd-workflow
+      name: '@local/sdd-workflow-plugin'
+      config: {}

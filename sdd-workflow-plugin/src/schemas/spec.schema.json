@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sdd-workflow-plugin/spec.schema.json",
+  "title": "SDD specification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "title", "version", "status", "owner", "goal", "scope", "updated_at"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "minLength": 1, "description": "Идентификатор фичи (например FEAT-001)." },
+    "title": { "type": "string", "minLength": 1 },
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+" },
+    "status": { "enum": ["draft", "review", "approved", "deprecated"] },
+    "owner": { "type": "string" },
+    "goal": { "type": "string", "description": "Цель фичи и решаемая проблема." },
+    "scope": { "type": "string", "description": "Границы объёма." },
+    "out_of_scope": { "type": "array", "items": { "type": "string" } },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "user_stories": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "as_a", "i_want", "so_that", "priority"],
+        "properties": {
+          "id": { "type": "string" },
+          "as_a": { "type": "string" },
+          "i_want": { "type": "string" },
+          "so_that": { "type": "string" },
+          "priority": { "enum": ["must", "should", "could"] }
+        }
+      }
+    },
+    "functional_requirements": { "$ref": "#/$defs/requirements" },
+    "non_functional_requirements": { "$ref": "#/$defs/requirements" },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "requirement_id", "statement", "verification"],
+        "properties": {
+          "id": { "type": "string" },
+          "requirement_id": { "type": "string" },
+          "statement": { "type": "string", "description": "Проверяемое условие приёмки." },
+          "verification": { "enum": ["test", "build", "lint", "typecheck", "integration", "manual"] }
+        }
+      }
+    },
+    "data_contracts": { "$ref": "#/$defs/contracts" },
+    "api_contracts": { "$ref": "#/$defs/contracts" },
+    "edge_cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "description", "expected_behavior", "requirement_ids"],
+        "properties": {
+          "id": { "type": "string" },
+          "description": { "type": "string" },
+          "expected_behavior": { "type": "string" },
+          "requirement_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "description"],
+        "properties": { "id": { "type": "string" }, "description": { "type": "string" } }
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "description"],
+        "properties": { "id": { "type": "string" }, "description": { "type": "string" }, "mitigation": { "type": "string" } }
+      }
+    },
+    "definition_of_done": { "type": "array", "items": { "type": "string" } },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "question", "blocking", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "question": { "type": "string" },
+          "blocking": { "type": "boolean" },
+          "status": { "enum": ["open", "answered", "tbd"] },
+          "answer": { "type": "string" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "description", "priority"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "priority": { "enum": ["must", "should", "could"] }
+        }
+      }
+    },
+    "contracts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "description", "requirement_ids"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "requirement_ids": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}

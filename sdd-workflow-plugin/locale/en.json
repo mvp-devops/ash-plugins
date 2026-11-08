@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "SDD Workflow",
+    "description": "Spec-Driven Development for DeepSeek Harness: machine-readable specification, traceable plan and tasks, evidence-gated implementation, validation reports, and an SDD panel in the Web UI."
+  },
+  "panel": "SDD Workflow"
+}

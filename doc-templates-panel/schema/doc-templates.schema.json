@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "doc-templates-panel/portable-document",
+  "title": "Переносимый документ набора шаблонов документации",
+  "type": "object",
+  "required": ["format", "schemaVersion", "templates"],
+  "properties": {
+    "format": { "const": "doc-templates-panel/templates" },
+    "storeVersion": { "type": "integer", "minimum": 1 },
+    "schemaVersion": { "type": "integer", "minimum": 1 },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "plugin": { "type": "string" },
+        "pluginVersion": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "templates": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/template" }
+    }
+  },
+  "$defs": {
+    "template": {
+      "type": "object",
+      "required": ["id", "name", "type", "scope", "content"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "type": {
+          "enum": [
+            "requirements",
+            "technical_specification",
+            "diagram",
+            "technical_design",
+            "test_case",
+            "test_protocol",
+            "custom"
+          ]
+        },
+        "scope": { "enum": ["global", "project"] },
+        "projectId": { "type": ["string", "null"], "maxLength": 128 },
+        "projectName": { "type": ["string", "null"], "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "format": { "enum": ["markdown", "plaintext"], "default": "markdown" },
+        "content": { "type": "string", "maxLength": 1000000 },
+        "variables": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["key"],
+            "properties": {
+              "key": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,63}$" },
+              "label": { "type": "string", "maxLength": 200 },
+              "required": { "type": "boolean" },
+              "defaultValue": { "type": "string" },
+              "helpText": { "type": "string", "maxLength": 500 }
+            },
+            "additionalProperties": false
+          }
+        },
+        "tags": { "type": "array", "items": { "type": "string", "maxLength": 50 }, "maxItems": 20 },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "author": { "type": "string", "maxLength": 200 },
+        "readonly": { "type": "boolean", "description": "Только для встроенных шаблонов; в пользовательском наборе игнорируется." }
+      },
+      "additionalProperties": false
+    }
+  }
+}
